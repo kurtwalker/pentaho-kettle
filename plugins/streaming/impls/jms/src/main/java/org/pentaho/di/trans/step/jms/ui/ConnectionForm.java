@@ -130,8 +130,16 @@ public class ConnectionForm {
     wIbmUser.setText( jmsDelegate.ibmUsername );
     wIbmPassword.setText( jmsDelegate.ibmPassword );
 
-    typesToButtons.get( JmsProvider.ConnectionType.valueOf( jmsDelegate.connectionType ) )
+    wActiveUrl.setText( jmsDelegate.amqUrl );
+    wActiveUser.setText( jmsDelegate.amqUsername );
+    wActivePassword.setText( jmsDelegate.amqPassword );
+
+    wGenericUrl.setText( jmsDelegate.jndiUrl );
+
+    JmsProvider.ConnectionType connectionType = JmsProvider.ConnectionType.valueOf( jmsDelegate.connectionType );
+    typesToButtons.get( connectionType )
       .setSelection( true );
+    toggleVisibility( connectionType );
   }
 
   private void displayConnTypes( Group wConnectionGroup ) {

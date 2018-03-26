@@ -48,20 +48,6 @@ public interface JmsProvider {
 
 
   enum ConnectionType {
-    WEBSPHERE {
-      public String toString() {
-        return getString( PKG, "JmsProvider.IBMMQ" );
-      }
-
-      public String getUrlHint() {
-        return getString( PKG, "JmsProvider.WSUrlHint" );
-
-      }
-
-      public String getDestinationHint() {
-        return getString( PKG, "JmsProvider.WSDestinationHint" );
-      }
-    },
     ACTIVEMQ {
       public String toString() {
         return getString( PKG, "JmsProvider.ActiveMQ" );
@@ -74,6 +60,20 @@ public interface JmsProvider {
 
       public String getDestinationHint() {
         return getString( PKG, "JmsProvider.ActiveMQDestinationHint" );
+      }
+    },
+    WEBSPHERE {
+      public String toString() {
+        return getString( PKG, "JmsProvider.IBMMQ" );
+      }
+
+      public String getUrlHint() {
+        return getString( PKG, "JmsProvider.WSUrlHint" );
+
+      }
+
+      public String getDestinationHint() {
+        return getString( PKG, "JmsProvider.WSDestinationHint" );
       }
     },
     JNDI {

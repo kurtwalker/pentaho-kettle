@@ -37,6 +37,7 @@ import java.util.List;
 
 import static org.pentaho.di.i18n.BaseMessages.getString;
 import static org.pentaho.di.trans.step.jms.JmsConstants.PKG;
+import static org.pentaho.di.trans.step.jms.context.JmsProvider.ConnectionType.ACTIVEMQ;
 import static org.pentaho.di.trans.step.jms.context.JmsProvider.ConnectionType.WEBSPHERE;
 import static org.pentaho.di.trans.step.jms.context.JmsProvider.DestinationType.QUEUE;
 
@@ -67,7 +68,7 @@ public  class JmsDelegate {
 
   @Injection ( name = "USE_JNDI" ) public boolean useJndi = false;
 
-  @Injection ( name = "CONNECTION_TYPE" ) public String connectionType = WEBSPHERE.name();
+  @Injection( name = "CONNECTION_TYPE" ) public String connectionType = ACTIVEMQ.name();
 
   @Injection ( name = "DESTINATION_TYPE" ) public String destinationType = QUEUE.name();
 
