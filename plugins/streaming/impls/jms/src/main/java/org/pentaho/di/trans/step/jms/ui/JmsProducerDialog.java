@@ -264,9 +264,9 @@ public class JmsProducerDialog extends BaseStepDialog implements StepDialogInter
     stepname = wStepname.getText();
     //TODO: uncomment the following line once the connection type is implemented in the connection form
     //jmsDelegate.connectionType = connectionForm.getConnection();
-    jmsDelegate.url = connectionForm.getUrl();
-    jmsDelegate.username = connectionForm.getUser();
-    jmsDelegate.password = connectionForm.getPassword();
+    jmsDelegate.ibmPassword = connectionForm.getUrl();
+    jmsDelegate.ibmUsername = connectionForm.getUser();
+    jmsDelegate.ibmPassword = connectionForm.getPassword();
     jmsDelegate.destinationType = destinationForm.getDestinationType();
     jmsDelegate.destinationName = destinationForm.getDestinationName();
     meta.setFieldToSend( wMessageField.getText() );
