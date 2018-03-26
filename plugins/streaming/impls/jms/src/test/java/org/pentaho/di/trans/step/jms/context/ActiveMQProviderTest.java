@@ -15,9 +15,9 @@ public class ActiveMQProviderTest {
     JmsProvider jmsProvider = new ActiveMQProvider();
 
     JmsDelegate del = new JmsDelegate( Collections.emptyList() );
-    del.url = "tcp://localhost:61616";
-    del.username = "admin";
-    del.password = "admin";
+    del.amqUrl = "tcp://localhost:61616";
+    del.amqUsername = "admin";
+    del.amqPassword = "admin";
     del.destinationName = "newTest";
     del.destinationType = "QUEUE";
 
