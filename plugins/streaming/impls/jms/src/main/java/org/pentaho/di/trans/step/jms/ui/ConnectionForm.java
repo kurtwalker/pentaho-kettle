@@ -113,9 +113,9 @@ public class ConnectionForm {
   }
 
   private void setStartingsVals() {
-    wUrl.setText( jmsDelegate.url );
-    wUser.setText( jmsDelegate.username );
-    wPassword.setText( jmsDelegate.password );
+    wUrl.setText( jmsDelegate.ibmUrl );
+    wUser.setText( jmsDelegate.ibmUsername );
+    wPassword.setText( jmsDelegate.ibmPassword );
 
     typesToButtons.get( JmsProvider.ConnectionType.valueOf( jmsDelegate.connectionType ) )
       .setSelection( true );

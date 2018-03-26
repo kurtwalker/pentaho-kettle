@@ -51,11 +51,17 @@ public  class JmsDelegate {
 
   @Injection ( name = "DESTINATION" ) public String destinationName = "";
 
-  @Injection ( name = "URL" ) public String url = "";
+  @Injection ( name = "IBMMQ_URL" ) public String ibmUrl = "";
 
-  @Injection ( name = "USERNAME" ) public String username = "";
+  @Injection ( name = "IBMMQ_USERNAME" ) public String ibmUsername = "";
 
-  @Sensitive @Injection ( name = "PASSWORD" ) public String password = "";
+  @Sensitive @Injection ( name = "IBMMQ_PASSWORD" ) public String ibmPassword = "";
+
+  @Injection ( name = "AMQ_URL" ) public String amqUrl = "";
+
+  @Injection ( name = "AMQ_USERNAME" ) public String amqUsername = "";
+
+  @Sensitive @Injection ( name = "AMQ_PASSWORD" ) public String amqPassword = "";
 
   @Injection ( name = "JNDI_URL" ) public String jndiUrl = "";
 

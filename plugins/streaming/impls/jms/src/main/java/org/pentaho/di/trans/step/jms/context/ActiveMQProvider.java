@@ -44,11 +44,11 @@ public class ActiveMQProvider implements JmsProvider {
 
   @Override public JMSContext getContext( JmsDelegate delegate, VariableSpace variableSpace ) {
     ConnectionFactory factory = new ActiveMQConnectionFactory(
-      variableSpace.environmentSubstitute( delegate.url ) );
+      variableSpace.environmentSubstitute( delegate.amqUrl ) );
 
     return factory.createContext(
-      variableSpace.environmentSubstitute( delegate.username ),
-      variableSpace.environmentSubstitute( delegate.password ) );
+      variableSpace.environmentSubstitute( delegate.amqUsername ),
+      variableSpace.environmentSubstitute( delegate.amqPassword ) );
 
   }
 
