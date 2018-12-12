@@ -960,10 +960,10 @@ public class TransMeta extends AbstractMeta
     dependencies.clear();
   }
 
-  public void addSquash( String name, List<StepMeta> steps ) {
+  public void addSquash( Point location, String name, List<StepMeta> steps ) {
     squashes.add(
       new SquashMeta(
-        steps.get( 0 ).getLocation(),
+        location,
         name,
         steps.stream().map( StepMeta::getName ).collect( Collectors.toList() ) ) );
   }

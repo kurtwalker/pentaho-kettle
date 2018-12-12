@@ -49,6 +49,8 @@ public class AreaOwner {
       JOB_ENTRY_BUSY, JOB_ENTRY_RESULT_SUCCESS, JOB_ENTRY_RESULT_FAILURE, JOB_ENTRY_RESULT_CHECKPOINT,
       STEP_INJECT_ICON,
 
+      SQUASH_ICON,
+
       CUSTOM;
 
     private static final Set<AreaType> jobContextMenuArea = EnumSet.of( MINI_ICONS_BALLOON, JOB_ENTRY_MINI_ICON_INPUT,

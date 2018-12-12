@@ -131,16 +131,7 @@ import org.pentaho.di.trans.debug.BreakPointListener;
 import org.pentaho.di.trans.debug.StepDebugMeta;
 import org.pentaho.di.trans.debug.TransDebugMeta;
 import org.pentaho.di.trans.debug.TransDebugMetaWrapper;
-import org.pentaho.di.trans.step.RemoteStep;
-import org.pentaho.di.trans.step.RowDistributionInterface;
-import org.pentaho.di.trans.step.RowDistributionPluginType;
-import org.pentaho.di.trans.step.RowListener;
-import org.pentaho.di.trans.step.StepErrorMeta;
-import org.pentaho.di.trans.step.StepIOMetaInterface;
-import org.pentaho.di.trans.step.StepInterface;
-import org.pentaho.di.trans.step.StepMeta;
-import org.pentaho.di.trans.step.StepMetaDataCombi;
-import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.trans.step.*;
 import org.pentaho.di.trans.step.errorhandling.Stream;
 import org.pentaho.di.trans.step.errorhandling.StreamIcon;
 import org.pentaho.di.trans.step.errorhandling.StreamInterface;
@@ -2228,8 +2219,10 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
     EnterTextDialog nameDialog = new EnterTextDialog( shell, title, message, "" );
     String name = nameDialog.open();
     if ( name != null ) {
-      transMeta.addSquash(name, selectedSteps);
+      selectedSteps.forEach( stepMeta -> stepMeta.setDraw( false ) );
+      transMeta.addSquash( lastclick, name, selectedSteps );
     }
+    canvas.redraw();
   }
 
   public void detachStep() {

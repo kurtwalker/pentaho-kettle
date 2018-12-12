@@ -332,8 +332,31 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
   private void drawHop( VisualHopMeta visualHopMeta ) {
   }
 
-  private void drawStep( SquashMeta sm ) {
-    //todo: implement
+  private void drawStep( SquashMeta squashMeta ) {
+    Point location = squashMeta.getLocation();
+    Point screenLocation = real2screen(location.x, location.y);
+    int x = screenLocation.x;
+    int y = screenLocation.y;
+
+    gc.setLineWidth( linewidth );
+
+    // Add to the list of areas...
+    if ( !shadow ) {
+      areaOwners.add( new AreaOwner( AreaType.SQUASH_ICON, x, y, iconsize, iconsize, offset, transMeta, squashMeta ) );
+    }
+
+    gc.setBackground( EColor.BACKGROUND );
+    gc.fillRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
+//    gc.drawStepIcon( x, y, squashMeta, magnification );
+    gc.setForeground( EColor.CRYSTAL );
+    gc.setForeground( 0, 93, 166 );
+    gc.drawRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
+
+    Point namePosition = getNamePosition( squashMeta.getName(), screenLocation, iconsize );
+
+    gc.setForeground( EColor.BLACK );
+    gc.setFont( EFont.GRAPH );
+    gc.drawText( squashMeta.getName(), namePosition.x, namePosition.y + 2, true );
   }
 
   private void checkDrawSlowStepIndicator( StepMeta stepMeta ) {
