@@ -2223,7 +2223,13 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
 
   public void squashSelectedSteps() {
     List<StepMeta> selectedSteps = transMeta.getSelectedSteps();
-    transMeta.squashes.put( "somekey", selectedSteps );
+    String title = BaseMessages.getString( PKG, "TransGraph.Dialog.SquashStepsName.Title" );
+    String message = BaseMessages.getString( PKG, "TransGraph.Dialog.SquashStepsName.Message" );
+    EnterTextDialog nameDialog = new EnterTextDialog( shell, title, message, "" );
+    String name = nameDialog.open();
+    if ( name != null ) {
+      transMeta.addSquash(name, selectedSteps);
+    }
   }
 
   public void detachStep() {

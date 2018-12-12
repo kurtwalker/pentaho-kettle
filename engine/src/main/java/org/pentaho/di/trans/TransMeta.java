@@ -206,6 +206,7 @@ public class TransMeta extends AbstractMeta
   /** The maximum date difference used for "max date" auditing and limiting job sizes. */
   protected double maxDateDifference;
 
+  /** The map of steps that have been visual squashed on the canvas. */
   public Map<String, List<StepMeta>> squashes = new HashMap<>();
 
   /**
@@ -951,6 +952,18 @@ public class TransMeta extends AbstractMeta
    */
   public void removeAllDependencies() {
     dependencies.clear();
+  }
+
+  public void addSquash( String name, List<StepMeta> steps ) {
+    squashes.put( name, steps );
+  }
+
+  public void removeSquash( String name ) {
+    squashes.remove( name );
+  }
+
+  public List<StepMeta> getSquash( String name ) {
+    return squashes.get( name );
   }
 
   /**
