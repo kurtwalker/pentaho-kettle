@@ -30,4 +30,5 @@ import org.pentaho.di.core.gui.Point;
  */
 public interface BaseMeta {
   Point getLocation();
+  String getName();
 }
