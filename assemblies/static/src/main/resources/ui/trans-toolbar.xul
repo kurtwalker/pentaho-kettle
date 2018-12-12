@@ -87,6 +87,7 @@
 
     <menuseparator />
     <menuitem id="trans-graph-entry-verify" label="${TransGraph.PopupMenu.CheckSelectedSteps}" command="transgraph.checkSelectedSteps()" />
+    <menuitem id="trans-graph-entry-squash" label="${TransGraph.PopupMenu.SquashSelectedSteps}" command="transgraph.squashSelectedSteps()" />
 
     <menuseparator />
     <menuitem id="trans-graph-entry-errors" label="${TransGraph.PopupMenu.Error}" command="transgraph.errorHandling()" />

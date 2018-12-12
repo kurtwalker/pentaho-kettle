@@ -2221,6 +2221,11 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
     spoon.checkTrans( transMeta, true );
   }
 
+  public void squashSelectedSteps() {
+    List<StepMeta> selectedSteps = transMeta.getSelectedSteps();
+    transMeta.squashes.put( "somekey", selectedSteps );
+  }
+
   public void detachStep() {
     detach( getCurrentStep() );
     selectedSteps = null;

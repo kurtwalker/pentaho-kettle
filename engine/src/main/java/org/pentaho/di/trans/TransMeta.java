@@ -206,6 +206,8 @@ public class TransMeta extends AbstractMeta
   /** The maximum date difference used for "max date" auditing and limiting job sizes. */
   protected double maxDateDifference;
 
+  public Map<String, List<StepMeta>> squashes = new HashMap<>();
+
   /**
    * The list of arguments to the transformation.
    *
