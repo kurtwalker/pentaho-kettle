@@ -47,6 +47,7 @@ import org.pentaho.di.core.logging.LogChannel;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.partition.PartitionSchema;
 import org.pentaho.di.trans.step.BaseStepData.StepExecutionStatus;
+import org.pentaho.di.trans.step.SquashMeta;
 import org.pentaho.di.trans.step.StepIOMetaInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
@@ -194,6 +195,8 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
       drawHop( hi );
     }
 
+    transMeta.squashHops.forEach( this::drawHop );
+
     EImage arrow;
     if ( candidate != null ) {
       drawHop( candidate, true );
@@ -237,6 +240,8 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
         drawStep( stepMeta );
       }
     }
+
+    transMeta.squashes.forEach( this::drawStep );
 
     if ( slowStepIndicatorEnabled ) {
 
@@ -322,6 +327,13 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
       drawRect( selrect );
     }
 
+  }
+
+  private void drawHop( VisualHopMeta visualHopMeta ) {
+  }
+
+  private void drawStep( SquashMeta sm ) {
+    //todo: implement
   }
 
   private void checkDrawSlowStepIndicator( StepMeta stepMeta ) {

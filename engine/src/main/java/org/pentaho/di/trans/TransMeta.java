@@ -30,6 +30,8 @@ import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.pentaho.di.base.AbstractMeta;
+import org.pentaho.di.base.BaseHopMeta;
+import org.pentaho.di.base.BaseMeta;
 import org.pentaho.di.cluster.ClusterSchema;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.core.CheckResult;
@@ -97,6 +99,7 @@ import org.pentaho.di.resource.ResourceReference;
 import org.pentaho.di.shared.SharedObjectInterface;
 import org.pentaho.di.trans.step.BaseStep;
 import org.pentaho.di.trans.step.RemoteStep;
+import org.pentaho.di.trans.step.SquashMeta;
 import org.pentaho.di.trans.step.StepErrorMeta;
 import org.pentaho.di.trans.step.StepIOMetaInterface;
 import org.pentaho.di.trans.step.StepMeta;
@@ -206,8 +209,11 @@ public class TransMeta extends AbstractMeta
   /** The maximum date difference used for "max date" auditing and limiting job sizes. */
   protected double maxDateDifference;
 
-  /** The map of steps that have been visual squashed on the canvas. */
-  public Map<String, List<StepMeta>> squashes = new HashMap<>();
+  /** The list of visual squashes.  not pertinent to trans execution*/
+  public List<SquashMeta> squashes = new ArrayList<>();
+
+  /** visual hops in/out of squashes */
+  public List<VisualHopMeta> squashHops = new ArrayList<>();
 
   /**
    * The list of arguments to the transformation.
