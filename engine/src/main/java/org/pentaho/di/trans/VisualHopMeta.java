@@ -38,16 +38,6 @@ public class VisualHopMeta  extends BaseHopMeta<BaseMeta> {
     return retval.toString();
   }
 
-  private StepMeta searchStep( List<StepMeta> steps, String name ) {
-    for ( StepMeta stepMeta : steps ) {
-      if ( stepMeta.getName().equalsIgnoreCase( name ) ) {
-        return stepMeta;
-      }
-    }
-
-    return null;
-  }
-
   public BaseMeta getFromStep() {
     return this.from;
   }

@@ -961,15 +961,11 @@ public class TransMeta extends AbstractMeta
   }
 
   public void addSquash( String name, List<StepMeta> steps ) {
-    squashes.put( name, steps );
-  }
-
-  public void removeSquash( String name ) {
-    squashes.remove( name );
-  }
-
-  public List<StepMeta> getSquash( String name ) {
-    return squashes.get( name );
+    squashes.add(
+      new SquashMeta(
+        steps.get( 0 ).getLocation(),
+        name,
+        steps.stream().map( StepMeta::getName ).collect( Collectors.toList() ) ) );
   }
 
   /**
