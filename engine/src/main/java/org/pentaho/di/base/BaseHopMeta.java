@@ -90,5 +90,4 @@ public abstract class BaseHopMeta<T> implements Cloneable, XMLInterface {
   public void setErrorHop( boolean errorHop ) {
     this.errorHop = errorHop;
   }
-
 }

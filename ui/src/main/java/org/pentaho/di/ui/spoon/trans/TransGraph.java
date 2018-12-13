@@ -23,6 +23,7 @@
 
 package org.pentaho.di.ui.spoon.trans;
 
+import com.google.common.collect.Iterables;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -120,13 +121,7 @@ import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositoryObjectType;
 import org.pentaho.di.repository.RepositoryOperation;
 import org.pentaho.di.shared.SharedObjects;
-import org.pentaho.di.trans.DatabaseImpact;
-import org.pentaho.di.trans.Trans;
-import org.pentaho.di.trans.TransExecutionConfiguration;
-import org.pentaho.di.trans.TransHopMeta;
-import org.pentaho.di.trans.TransMeta;
-import org.pentaho.di.trans.TransPainter;
-import org.pentaho.di.trans.TransSupplier;
+import org.pentaho.di.trans.*;
 import org.pentaho.di.trans.debug.BreakPointListener;
 import org.pentaho.di.trans.debug.StepDebugMeta;
 import org.pentaho.di.trans.debug.TransDebugMeta;
@@ -194,6 +189,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 /**
  * This class handles the display of the transformations in a graphical way using icons, arrows, etc. One transformation
@@ -2220,7 +2216,18 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
     String name = nameDialog.open();
     if ( name != null ) {
       selectedSteps.forEach( stepMeta -> stepMeta.setDraw( false ) );
-      transMeta.addSquash( lastclick, name, selectedSteps );
+      SquashMeta squashMeta = transMeta.addSquash(lastclick, name, selectedSteps);
+
+      // Create hops to and from the squash meta
+      List<TransHopMeta> startingHops = transMeta.findAllTransHopTo( selectedSteps.get( 0 ) );
+      transMeta.hopsToSquash.addAll(
+          startingHops.stream().map(hop -> new VisualHopMeta(hop.getFromStep(), squashMeta)).collect(Collectors.toList())
+      );
+
+      List<TransHopMeta> endingHops= transMeta.findAllTransHopFrom( Iterables.getLast( selectedSteps ) );
+      transMeta.hopsFromSquash.addAll(
+          endingHops.stream().map(hop -> new VisualHopMeta(squashMeta, hop.getToStep())).collect(Collectors.toList())
+      );
     }
     canvas.redraw();
   }

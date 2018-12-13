@@ -25,6 +25,7 @@ package org.pentaho.di.trans;
 import java.util.List;
 import java.util.Map;
 
+import org.pentaho.di.base.BaseMeta;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.core.NotePadMeta;
@@ -192,10 +193,15 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
 
     for ( int i = 0; i < transMeta.nrTransHops(); i++ ) {
       TransHopMeta hi = transMeta.getTransHop( i );
-      drawHop( hi );
+      // if any step connected to a hop is set to no be drawn
+      // then the hop should not be drawn as well
+      if ( hi.getFromStep().isDrawStep() && hi.getToStep().isDrawStep() ) {
+        drawHop(hi);
+      }
     }
 
-    transMeta.squashHops.forEach( this::drawHop );
+    transMeta.hopsToSquash.forEach( this::drawHopToSquash );
+    transMeta.hopsFromSquash.forEach( this::drawHopFromSquash );
 
     EImage arrow;
     if ( candidate != null ) {
@@ -329,10 +335,27 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
 
   }
 
-  private void drawHop( VisualHopMeta visualHopMeta ) {
+  private void drawHopToSquash( VisualHopMeta visualHopMeta ) {
+    StepMeta fs = (StepMeta) visualHopMeta.getFromStep();
+    SquashMeta ts = (SquashMeta) visualHopMeta.getToStep();
+
+    if ( fs != null && ts != null ) {
+      drawLine( fs, ts, visualHopMeta );
+    }
+  }
+
+  private void drawHopFromSquash( VisualHopMeta visualHopMeta ) {
+    SquashMeta fs = (SquashMeta) visualHopMeta.getFromStep();
+    StepMeta ts = (StepMeta) visualHopMeta.getToStep();
+
+    if ( fs != null && ts != null ) {
+      drawLine( fs, ts, visualHopMeta );
+    }
   }
 
   private void drawStep( SquashMeta squashMeta ) {
+    int alpha = gc.getAlpha();
+
     Point location = squashMeta.getLocation();
     Point screenLocation = real2screen(location.x, location.y);
     int x = screenLocation.x;
@@ -347,7 +370,7 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
 
     gc.setBackground( EColor.BACKGROUND );
     gc.fillRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
-//    gc.drawStepIcon( x, y, squashMeta, magnification );
+    gc.drawSquashIcon( x, y, squashMeta, magnification );
     gc.setForeground( EColor.CRYSTAL );
     gc.setForeground( 0, 93, 166 );
     gc.drawRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
@@ -357,6 +380,7 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
     gc.setForeground( EColor.BLACK );
     gc.setFont( EFont.GRAPH );
     gc.drawText( squashMeta.getName(), namePosition.x, namePosition.y + 2, true );
+    gc.setAlpha( alpha );
   }
 
   private void checkDrawSlowStepIndicator( StepMeta stepMeta ) {
@@ -1033,6 +1057,133 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
     int ypos = screen.y + iconsize + 5;
 
     return new Point( xpos, ypos );
+  }
+
+  private void drawLine( StepMeta fs, SquashMeta ts, VisualHopMeta hop ) {
+    int[] line = getLine( fs, ts );
+
+    EColor col;
+    ELineStyle linestyle = ELineStyle.SOLID;
+    int activeLinewidth = linewidth;
+
+    EImage arrow;
+    if ( hop.isEnabled() ) {
+      col = EColor.HOP_DEFAULT;
+      arrow = EImage.ARROW_DEFAULT;
+    } else {
+      col = EColor.GRAY;
+      arrow = EImage.ARROW_DISABLED;
+    }
+
+    gc.setForeground( col );
+    gc.setLineStyle( linestyle );
+    gc.setLineWidth( activeLinewidth );
+
+    drawArrow( arrow, line, hop, fs, ts );
+
+    gc.setForeground( EColor.BLACK );
+    gc.setBackground( EColor.BACKGROUND );
+    gc.setLineStyle( ELineStyle.SOLID );
+  }
+
+  private void drawLine( SquashMeta fs, StepMeta ts, VisualHopMeta hop ) {
+    int[] line = getLine( fs, ts );
+
+    EColor col;
+    ELineStyle linestyle = ELineStyle.SOLID;
+    int activeLinewidth = linewidth;
+
+    EImage arrow;
+    if ( hop.isEnabled() ) {
+      col = EColor.HOP_DEFAULT;
+      arrow = EImage.ARROW_DEFAULT;
+    } else {
+      col = EColor.GRAY;
+      arrow = EImage.ARROW_DISABLED;
+    }
+
+    gc.setForeground( col );
+    gc.setLineStyle( linestyle );
+    gc.setLineWidth( activeLinewidth );
+
+    drawArrow( arrow, line, hop, fs, ts );
+
+    gc.setForeground( EColor.BLACK );
+    gc.setBackground( EColor.BACKGROUND );
+    gc.setLineStyle( ELineStyle.SOLID );
+  }
+
+  private void drawArrow( EImage arrow, int[] line, VisualHopMeta hop, Object startObject, Object endObject ) {
+    Point screen_from = real2screen( line[0], line[1] );
+    Point screen_to = real2screen( line[2], line[3] );
+
+    drawArrow( arrow, screen_from.x, screen_from.y, screen_to.x, screen_to.y, theta, calcArrowLength(), -1,
+        startObject, endObject );
+  }
+
+  private void drawArrow( EImage arrow, int x1, int y1, int x2, int y2, double theta, int size, double factor,
+                          Object startObject, Object endObject ) {
+    int mx, my;
+    int a, b, dist;
+    double angle;
+
+    gc.drawLine( x1, y1, x2, y2 );
+
+    a = Math.abs( x2 - x1 );
+    b = Math.abs( y2 - y1 );
+    dist = (int) Math.sqrt( a * a + b * b );
+
+    // determine factor (position of arrow to left side or right side
+    // 0-->100%)
+    if ( factor < 0 ) {
+      if ( dist >= 2 * iconsize ) {
+        factor = 1.3;
+      } else {
+        factor = 1.2;
+      }
+    }
+
+    // in between 2 points
+    mx = (int) ( x1 + factor * ( x2 - x1 ) / 2 );
+    my = (int) ( y1 + factor * ( y2 - y1 ) / 2 );
+
+    // calculate points for arrowhead
+    // calculate points for arrowhead
+    angle = Math.atan2( y2 - y1, x2 - x1 ) + ( Math.PI / 2 );
+
+    boolean q1 = Math.toDegrees( angle ) >= 0 && Math.toDegrees( angle ) <= 90;
+    boolean q2 = Math.toDegrees( angle ) > 90 && Math.toDegrees( angle ) <= 180;
+    boolean q3 = Math.toDegrees( angle ) > 180 && Math.toDegrees( angle ) <= 270;
+    boolean q4 = Math.toDegrees( angle ) > 270 || Math.toDegrees( angle ) < 0;
+
+    if ( q1 || q3 ) {
+      gc.drawImage( arrow, mx + 1, my, magnification, angle );
+    } else if ( q2 || q4 ) {
+      gc.drawImage( arrow, mx, my, magnification, angle );
+    }
+
+    if ( startObject instanceof StepMeta && endObject instanceof StepMeta ) {
+      factor = 0.8;
+
+      StepMeta fs = (StepMeta) startObject;
+      StepMeta ts = (StepMeta) endObject;
+
+      // in between 2 points
+      mx = (int) (x1 + factor * (x2 - x1) / 2) - 8;
+      my = (int) (y1 + factor * (y2 - y1) / 2) - 8;
+
+      StepIOMetaInterface ioMeta = fs.getStepMetaInterface().getStepIOMeta();
+      StreamInterface targetStream = ioMeta.findTargetStream(ts);
+      if (targetStream != null) {
+        EImage hopsIcon = BasePainter.getStreamIconImage(targetStream.getStreamIcon());
+        Point bounds = gc.getImageBounds(hopsIcon);
+        gc.drawImage(hopsIcon, mx, my, magnification);
+        if (!shadow) {
+          areaOwners.add(new AreaOwner(
+              AreaType.STEP_TARGET_HOP_ICON, mx, my, bounds.x, bounds.y, offset, fs, targetStream));
+        }
+      }
+    }
   }
 
   private void drawLine( StepMeta fs, StepMeta ts, TransHopMeta hi, boolean is_candidate ) {

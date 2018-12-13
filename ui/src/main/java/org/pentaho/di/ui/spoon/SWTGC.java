@@ -42,6 +42,7 @@ import org.pentaho.di.core.SwtUniversalImage;
 import org.pentaho.di.core.gui.GCInterface;
 import org.pentaho.di.core.gui.Point;
 import org.pentaho.di.job.entry.JobEntryCopy;
+import org.pentaho.di.trans.step.SquashMeta;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.ui.core.ConstUI;
 import org.pentaho.di.ui.core.PropsUI;
@@ -424,6 +425,18 @@ public class SWTGC implements GCInterface {
     }
     if ( im != null ) { // Draw the icon!
       org.eclipse.swt.graphics.Rectangle bounds = im.getBounds();
+      gc.drawImage( im, 0, 0, bounds.width, bounds.height, x, y, iconsize, iconsize );
+    }
+  }
+
+  @Override
+  public void drawSquashIcon( int x, int y, SquashMeta squashMeta, float magnification ) {
+    Image im =
+        GUIResource.getInstance().getSwtImageSquash().getAsBitmapForSize( gc.getDevice(), Math.round( iconsize * magnification ),
+            Math.round( iconsize * magnification ) );
+
+    if ( im != null ) { // Draw the icon!
+      Rectangle bounds = im.getBounds();
       gc.drawImage( im, 0, 0, bounds.width, bounds.height, x, y, iconsize, iconsize );
     }
   }

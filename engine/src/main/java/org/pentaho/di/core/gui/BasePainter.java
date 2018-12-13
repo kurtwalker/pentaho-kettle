@@ -481,7 +481,7 @@ public abstract class BasePainter<Hop extends BaseHopMeta<?>, Part extends BaseM
     this.candidate = candidate;
   }
 
-  protected int[] getLine( Part fs, Part ts ) {
+  protected int[] getLine( BaseMeta fs, BaseMeta ts ) {
     if ( fs == null || ts == null ) {
       return null;
     }
