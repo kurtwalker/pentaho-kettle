@@ -212,8 +212,11 @@ public class TransMeta extends AbstractMeta
   /** The list of visual squashes.  not pertinent to trans execution*/
   public List<SquashMeta> squashes = new ArrayList<>();
 
-  /** visual hops in/out of squashes */
-  public List<VisualHopMeta> squashHops = new ArrayList<>();
+  /** visual hops into squashes */
+  public List<VisualHopMeta> hopsToSquash = new ArrayList<>();
+
+  /** visual hops from squashes */
+  public List<VisualHopMeta> hopsFromSquash = new ArrayList<>();
 
   /**
    * The list of arguments to the transformation.
@@ -960,12 +963,13 @@ public class TransMeta extends AbstractMeta
     dependencies.clear();
   }
 
-  public void addSquash( Point location, String name, List<StepMeta> steps ) {
-    squashes.add(
-      new SquashMeta(
+  public SquashMeta addSquash( Point location, String name, List<StepMeta> steps ) {
+    SquashMeta squashMeta = new SquashMeta(
         location,
         name,
-        steps.stream().map( StepMeta::getName ).collect( Collectors.toList() ) ) );
+        steps.stream().map( StepMeta::getName ).collect( Collectors.toList() ) );
+    squashes.add( squashMeta );
+    return squashMeta;
   }
 
   /**
@@ -1138,6 +1142,12 @@ public class TransMeta extends AbstractMeta
     return hops.stream()
       .filter( hop ->  hop.getFromStep() != null && hop.getFromStep().equals( fromstep ) )
       .collect( Collectors.toList() );
+  }
+
+  public List<TransHopMeta> findAllTransHopTo( StepMeta fromstep ) {
+    return hops.stream()
+        .filter( hop ->  hop.getToStep() != null && hop.getToStep().equals( fromstep ) )
+        .collect( Collectors.toList() );
   }
   /**
    * Find a certain hop in the transformation.

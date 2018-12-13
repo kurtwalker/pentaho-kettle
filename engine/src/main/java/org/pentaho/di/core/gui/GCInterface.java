@@ -23,6 +23,7 @@
 package org.pentaho.di.core.gui;
 
 import org.pentaho.di.job.entry.JobEntryCopy;
+import org.pentaho.di.trans.step.SquashMeta;
 import org.pentaho.di.trans.step.StepMeta;
 
 public interface GCInterface extends PrimitiveGCInterface {
@@ -34,4 +35,12 @@ public interface GCInterface extends PrimitiveGCInterface {
   public void drawStepIcon( int x, int y, StepMeta stepMeta, float magnification );
 
   public void drawStepIcon( int x, int y, StepMeta stepMeta );
+
+  default void drawSquashIcon(int x, int y, SquashMeta squashMetaMeta, float magnification ) {
+
+  }
+
+  default void drawSquashIcon( int x, int y, SquashMeta squashMeta ) {
+
+  }
 }

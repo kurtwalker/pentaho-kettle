@@ -221,6 +221,8 @@ public class GUIResource {
 
   private SwtUniversalImage imageDummy;
 
+  private SwtUniversalImage imageSquash;
+
   private SwtUniversalImage imageMissing;
 
   private Image imageSpoon;
@@ -611,6 +613,7 @@ public class GUIResource {
       imageCredits.dispose();
       imageStart.dispose();
       imageDummy.dispose();
+      imageSquash.dispose();
       imageMissing.dispose();
       imageSpoon.dispose();
       imageSpoonLow.dispose();
@@ -939,6 +942,11 @@ public class GUIResource {
     imageDummy =
       SwtSvgImageUtil.getUniversalImage( display, getClass().getClassLoader(), BasePropertyHandler
         .getProperty( "DUM_image" ) );
+
+    // "ui/images/squash.png"
+    imageSquash =
+        SwtSvgImageUtil.getUniversalImage( display, getClass().getClassLoader(), BasePropertyHandler
+            .getProperty( "SQUASH_image" ) );
 
     //ui/images/missing_entry.svg
     imageMissing =
@@ -1692,6 +1700,10 @@ public class GUIResource {
 
   public SwtUniversalImage getSwtImageDummy() {
     return imageDummy;
+  }
+
+  public SwtUniversalImage getSwtImageSquash() {
+    return imageSquash;
   }
 
   /**
