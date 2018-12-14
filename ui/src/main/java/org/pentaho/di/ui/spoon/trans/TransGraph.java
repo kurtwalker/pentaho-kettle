@@ -1948,7 +1948,9 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
       StepMeta stepMeta = transMeta.getStep( i );
       Point a = stepMeta.getLocation();
       if ( rect.contains( a.x, a.y ) ) {
-        stepMeta.setSelected( true );
+        if ( stepMeta.isDrawStep() ) {
+          stepMeta.setSelected(true);
+        }
       }
     }
 

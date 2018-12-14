@@ -3848,7 +3848,9 @@ public class TransMeta extends AbstractMeta
     int i;
     for ( i = 0; i < nrSteps(); i++ ) {
       StepMeta stepMeta = getStep( i );
-      stepMeta.setSelected( true );
+      if ( stepMeta.isDrawStep() ) {
+        stepMeta.setSelected(true);
+      }
     }
     for ( i = 0; i < nrNotes(); i++ ) {
       NotePadMeta ni = getNote( i );
