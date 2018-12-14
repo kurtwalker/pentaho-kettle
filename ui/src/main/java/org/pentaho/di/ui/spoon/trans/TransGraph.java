@@ -2216,20 +2216,36 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
     String name = nameDialog.open();
     if ( name != null ) {
       selectedSteps.forEach( stepMeta -> stepMeta.setDraw( false ) );
-      SquashMeta squashMeta = transMeta.addSquash(lastclick, name, selectedSteps);
+      StepMeta firstStep = selectedSteps.get(0);
+      SquashMeta squashMeta = transMeta.addSquash( firstStep.getLocation(), name, selectedSteps );
+
+      // Move downstream steps toward the squashed step
+      StepMeta lastStep = Iterables.getLast(selectedSteps);
+      int diffX = lastStep.getLocation().x - firstStep.getLocation().x;
+      int diffY = lastStep.getLocation().y - firstStep.getLocation().y;
+      moveDownstreamSteps( transMeta.findNextSteps( lastStep ), diffX, diffY );
 
       // Create hops to and from the squash meta
-      List<TransHopMeta> startingHops = transMeta.findAllTransHopTo( selectedSteps.get( 0 ) );
+      List<TransHopMeta> startingHops = transMeta.findAllTransHopTo(firstStep);
       transMeta.hopsToSquash.addAll(
           startingHops.stream().map(hop -> new VisualHopMeta(hop.getFromStep(), squashMeta)).collect(Collectors.toList())
       );
 
-      List<TransHopMeta> endingHops= transMeta.findAllTransHopFrom( Iterables.getLast( selectedSteps ) );
+      List<TransHopMeta> endingHops= transMeta.findAllTransHopFrom(lastStep);
       transMeta.hopsFromSquash.addAll(
           endingHops.stream().map(hop -> new VisualHopMeta(squashMeta, hop.getToStep())).collect(Collectors.toList())
       );
     }
     canvas.redraw();
+  }
+
+  private void moveDownstreamSteps(List<StepMeta> steps, int diffX, int diffY) {
+    steps.forEach(step -> {
+      moveDownstreamSteps(transMeta.findNextSteps(step), diffX, diffY);
+      Point location = step.getLocation();
+      location.x = location.x - diffX;
+      location.y = location.y - diffY;
+    } );
   }
 
   public void detachStep() {
