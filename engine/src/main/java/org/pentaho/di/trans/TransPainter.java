@@ -362,20 +362,21 @@ public class TransPainter extends BasePainter<TransHopMeta, StepMeta> {
     int y = screenLocation.y;
 
     gc.setLineWidth( linewidth );
+    int squashIconSize = iconsize + 20;
 
     // Add to the list of areas...
     if ( !shadow ) {
-      areaOwners.add( new AreaOwner( AreaType.SQUASH_ICON, x, y, iconsize, iconsize, offset, transMeta, squashMeta ) );
+      areaOwners.add( new AreaOwner( AreaType.SQUASH_ICON, x, y, squashIconSize, squashIconSize, offset, transMeta, squashMeta ) );
     }
 
     gc.setBackground( EColor.BACKGROUND );
-    gc.fillRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
+    gc.fillRoundRectangle( x - 1, y - 1,  squashIconSize + 1, squashIconSize + 1, 8, 8 );
     gc.drawSquashIcon( x, y, squashMeta, magnification );
     gc.setForeground( EColor.CRYSTAL );
     gc.setForeground( 0, 93, 166 );
-    gc.drawRoundRectangle( x - 1, y - 1, iconsize + 1, iconsize + 1, 8, 8 );
+    gc.drawRoundRectangle( x - 1, y - 1, squashIconSize + 1, squashIconSize + 1, 8, 8 );
 
-    Point namePosition = getNamePosition( squashMeta.getName(), screenLocation, iconsize );
+    Point namePosition = getNamePosition( squashMeta.getName(), screenLocation, squashIconSize );
 
     gc.setForeground( EColor.BLACK );
     gc.setFont( EFont.GRAPH );

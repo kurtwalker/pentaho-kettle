@@ -431,13 +431,14 @@ public class SWTGC implements GCInterface {
 
   @Override
   public void drawSquashIcon( int x, int y, SquashMeta squashMeta, float magnification ) {
+    int squashIconSize = iconsize + 20;
     Image im =
-        GUIResource.getInstance().getSwtImageSquash().getAsBitmapForSize( gc.getDevice(), Math.round( iconsize * magnification ),
-            Math.round( iconsize * magnification ) );
+        GUIResource.getInstance().getSwtImageSquash().getAsBitmapForSize( gc.getDevice(), Math.round( squashIconSize * magnification ),
+            Math.round( squashIconSize * magnification ) );
 
     if ( im != null ) { // Draw the icon!
       Rectangle bounds = im.getBounds();
-      gc.drawImage( im, 0, 0, bounds.width, bounds.height, x, y, iconsize, iconsize );
+      gc.drawImage( im, 0, 0, bounds.width, bounds.height, x, y, squashIconSize, squashIconSize );
     }
   }
 
