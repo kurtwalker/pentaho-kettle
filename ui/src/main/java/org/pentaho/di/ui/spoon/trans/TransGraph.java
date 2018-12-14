@@ -367,6 +367,7 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
 
   Timer redrawTimer;
   private ToolItem stopItem;
+  private SquashMeta selectedSquash;
 
   public void setCurrentNote( NotePadMeta ni ) {
     this.ni = ni;
@@ -940,7 +941,8 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
             }
             redraw();
             break;
-
+          case SQUASH_ICON:
+            selectedSquash = (SquashMeta) areaOwner.getOwner();
           case NOTE:
             ni = (NotePadMeta) areaOwner.getOwner();
             selectedNotes = transMeta.getSelectedNotes();
@@ -2236,6 +2238,14 @@ public class TransGraph extends AbstractGraph implements XulEventHandler, Redraw
           endingHops.stream().map(hop -> new VisualHopMeta(squashMeta, hop.getToStep())).collect(Collectors.toList())
       );
     }
+    canvas.redraw();
+  }
+
+  public void expandSquash() {
+    transMeta.getSteps().forEach( StepMeta::drawStep );
+    transMeta.squashes.clear();
+    transMeta.hopsFromSquash.clear();
+    transMeta.hopsToSquash.clear();
     canvas.redraw();
   }
 
